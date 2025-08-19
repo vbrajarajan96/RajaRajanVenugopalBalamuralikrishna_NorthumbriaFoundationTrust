@@ -10,21 +10,19 @@ namespace NorthumbriaFoundationTrust.Tests.Pages
     public class SearchResultsPage
     {
         private readonly IPage _page;
-
         public SearchResultsPage(IPage page) => _page = page;
 
-        // Main search results content area.
-        private ILocator ResultsContainer =>
-            _page.Locator("main, #content, [role='main']").First;
+        // Main search results content area
+        private ILocator ResultsContainer => _page.Locator("#page-results");
 
         /// <summary>
-        /// Waits for the results page to load and for any item containing the search term.
+        /// Waits for the results page to load and for any result item containing the search term within results container.
         /// </summary>
         public async Task WaitForResultsAsync(string term)
         {
             await _page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
             await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
-            var anyHit = _page.GetByText(term, new() { Exact = false }).First;
+            var anyHit = ResultsContainer.GetByText(term, new() { Exact = false }).First;
             await anyHit.WaitForAsync(new()
             {
                 State = WaitForSelectorState.Visible,
@@ -33,10 +31,10 @@ namespace NorthumbriaFoundationTrust.Tests.Pages
         }
 
         /// <summary>
-        /// Returns a locator for a result link by matching text.
+        /// Returns a locator for a result link by matching text, scoped inside results container.
         /// </summary>
         public ILocator ResultLink(string text) =>
-            _page.GetByRole(AriaRole.Link, new() { NameRegex = new Regex(text, RegexOptions.IgnoreCase) });
+            ResultsContainer.GetByRole(AriaRole.Link, new() { NameRegex = new Regex(text, RegexOptions.IgnoreCase) });
 
         /// <summary>
         /// Opens the first matching result link.

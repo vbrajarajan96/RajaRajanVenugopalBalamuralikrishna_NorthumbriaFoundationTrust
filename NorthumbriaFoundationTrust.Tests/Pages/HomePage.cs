@@ -1,4 +1,5 @@
 using Microsoft.Playwright;
+using System.Threading.Tasks;
 
 namespace NorthumbriaFoundationTrust.Tests.Pages
 {
@@ -13,19 +14,23 @@ namespace NorthumbriaFoundationTrust.Tests.Pages
 
         public Task OpenAsync(string baseUrl) => _page.GotoAsync(baseUrl);
 
-        // Returns the search input field via role and label or reliable fallback.
-        private async Task<ILocator> GetSearchInputAsync()
+        // Returns the search input field via placeholder with a reliable fallback
+        public async Task<ILocator> GetSearchInputAsync()
         {
-            var primary = _page.GetByRole(AriaRole.Textbox, new() { Name = "Enter your search" });
-            if (await primary.CountAsync() > 0) return primary;
+            var primary = _page.GetByPlaceholder("What can we help you to find today?");
+            if (await primary.CountAsync() > 0)
+                return primary;
+
             return _page.Locator("input.search-field[placeholder*='find today' i]").First;
         }
 
-        // Returns the search button via role and label or reliable fallback.
-        private async Task<ILocator> GetSearchButtonAsync()
+        // Returns the search button via role and aria-label with fallback
+        public async Task<ILocator> GetSearchButtonAsync()
         {
             var primary = _page.GetByRole(AriaRole.Button, new() { Name = "Search" });
-            if (await primary.CountAsync() > 0) return primary;
+            if (await primary.CountAsync() > 0)
+                return primary;
+
             return _page.Locator("button.submit-btn[aria-label='Search']").First;
         }
 

@@ -24,7 +24,7 @@ namespace NorthumbriaFoundationTrust.Tests.Steps
         {
             _home = new HomePage(_ctx.Page);
             await _home.OpenAsync(_ctx.BaseUrl);
-            var searchInput = _ctx.Page.GetByRole(AriaRole.Textbox, new() { Name = "Enter your search" });
+            var searchInput = await _home.GetSearchInputAsync();
             await searchInput.WaitForAsync();
         }
 
@@ -39,7 +39,7 @@ namespace NorthumbriaFoundationTrust.Tests.Steps
         public async Task WhenTheUserClicksTheSearchButton()
         {
             await _home!.SubmitSearchByButtonAsync();
-            _results = new SearchResultsPage(_ctx.Page);
+            _results ??= new SearchResultsPage(_ctx.Page);
             await _results.WaitForResultsAsync(_searchTerm ?? UiContext.Texts.SearchTerm);
         }
 
@@ -47,7 +47,7 @@ namespace NorthumbriaFoundationTrust.Tests.Steps
         public async Task WhenTheUserPressesEnterToSubmitTheSearch()
         {
             await _home!.SubmitSearchByEnterAsync();
-            _results = new SearchResultsPage(_ctx.Page);
+            _results ??= new SearchResultsPage(_ctx.Page);
             await _results.WaitForResultsAsync(_searchTerm ?? UiContext.Texts.SearchTerm);
         }
 
@@ -55,7 +55,9 @@ namespace NorthumbriaFoundationTrust.Tests.Steps
         public async Task ThenResultsRelevantToAreDisplayed(string term)
         {
             _results ??= new SearchResultsPage(_ctx.Page);
-            var hit = _ctx.Page.Locator("#search-results a", new() { HasText = term }).First;
+            var resultsContainer = _ctx.Page.Locator("#page-results");
+            var hit = resultsContainer.GetByRole(AriaRole.Link,
+                new() { NameRegex = new Regex(term, RegexOptions.IgnoreCase) }).First;
             await hit.WaitForAsync();
             Assert.That(await hit.IsVisibleAsync(), Is.True, $"Expected at least one result containing '{term}'.");
         }
@@ -72,7 +74,7 @@ namespace NorthumbriaFoundationTrust.Tests.Steps
         {
             _quality ??= new QualitySafetyPage(_ctx.Page);
             await _quality.OpenTileAsync(linkText);
-            await _ctx.Page.WaitForURLAsync(new Regex(".*/continually-improving-services/?$", RegexOptions.IgnoreCase));
+            await _ctx.Page.WaitForURLAsync(new Regex(@".*/continually-improving-services/?$", RegexOptions.IgnoreCase));
         }
 
         [Then(@"the page shows the relevant information about this section")]
