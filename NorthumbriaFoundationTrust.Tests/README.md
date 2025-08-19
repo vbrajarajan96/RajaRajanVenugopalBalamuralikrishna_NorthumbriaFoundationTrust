@@ -2,6 +2,12 @@
 ## Prerequisites
 - .NET 8 SDK
 - Playwright CLI and browsers
+## Clone Repository
+
+To clone this repository locally, run:
+```sh
+git clone https://github.com/vbrajarajan96/RajaRajanVenugopalBalamuralikrishna_NorthumbriaFoundationTrust.git
+```
 ## Setup
 1. Restore packages
 ```sh
