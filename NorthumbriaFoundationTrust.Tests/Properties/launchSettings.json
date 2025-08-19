@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "NorthumbriaFoundationTrust.Tests": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "BROWSER": "firefox"
+      }
+    }
+  }
+}

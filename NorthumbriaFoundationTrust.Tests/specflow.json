@@ -1,0 +1,15 @@
+{
+  "specFlow": {
+    "language": {
+      "feature": "en-us"
+    },
+    "bindingCulture": {
+      "name": "en-US"
+    },
+    "trace": {
+      "traceSuccessfulSteps": true,
+      "traceTimings": true,
+      "minTracedDuration": "00:00:00.200"
+    }
+  }
+}

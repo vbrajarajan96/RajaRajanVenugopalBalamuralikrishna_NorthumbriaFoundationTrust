@@ -1,0 +1,10 @@
+bin/
+obj/
+TestResults/
+*.user
+*.suo
+*.cache
+*.ide/
+.vscode/
+.vs/
+*.png
